@@ -1,1 +1,7 @@
+<<<<<<< HEAD
 * text=auto eol=lf
+=======
+/gradlew text eol=lf
+*.bat text eol=crlf
+*.jar binary
+>>>>>>> 193f3bb415007e5d73595bffbb0d7cc28309093f
