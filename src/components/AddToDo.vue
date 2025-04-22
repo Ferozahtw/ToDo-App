@@ -1,30 +1,58 @@
 <template>
-  <div>
-    <h3>Neue Aufgabe hinzufügen</h3>
-    <form @submit.prevent="addTodo">
-      <input type="text" v-model="newTodo.title" placeholder="Aufgabe eingeben" required />
-      <button type="submit">Hinzufügen</button>
-    </form>
-  </div>
+  <form @submit.prevent="addTodo" class="add-todo-form">
+    <input
+      v-model="newTodo"
+      type="text"
+      placeholder="Neue Aufgabe hinzufügen..."
+      class="todo-input"
+    />
+    <button type="submit" class="add-btn">Hinzufügen</button>
+  </form>
 </template>
 
-<script>
-export default {
-  name: 'AddToDo',
-  data() {
-    return {
-      newTodo: {
-        title: '',
-        done: false
-      }
-    };
-  },
-  methods: {
-    async addTodo() {
-      await axios.post('http://localhost:8080/api/todos', this.newTodo);
-      this.newTodo.title = ''; // Reset input field after adding
-      this.$emit('todo-added');
-    }
+<script setup>
+import { ref } from 'vue';
+
+const newTodo = ref(''); // Ref für die neue Aufgabe
+
+const addTodo = () => {
+  if (newTodo.value.trim()) {
+    // Hinzufügen des neuen ToDos zur Liste
+    todos.value.push({
+      id: Date.now(), // Einzigartige ID
+      text: newTodo.value,
+      done: false,
+    });
+    newTodo.value = ''; // Eingabefeld leeren
   }
 };
 </script>
+
+<style scoped>
+.add-todo-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.todo-input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  width: 100%;
+  font-size: 16px;
+}
+
+.add-btn {
+  padding: 10px 20px;
+  background-color: #42b983;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background-color: #3d9b72;
+}
+</style>

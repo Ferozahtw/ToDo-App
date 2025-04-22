@@ -1,37 +1,87 @@
 <template>
   <div>
     <h2>ToDo Liste</h2>
-    <ul>
+    <div class="filter">
+      <button @click="filterTodos('all')">Alle</button>
+      <button @click="filterTodos('done')">Erledigt</button>
+      <button @click="filterTodos('undone')">Nicht erledigt</button>
+    </div>
+    <transition-group name="fade" tag="ul">
       <ToDoItem
-      v-for="todo in todos"
-      :key="todo.id"
-      :todo="todo"
+        v-for="todo in filteredTodos"
+        :key="todo.id"
+        :todo="todo"
+        @delete="deleteTodo(todo.id)"
+        @toggleDone="toggleTodoDone(todo)"
       />
-    </ul>
+    </transition-group>
   </div>
 </template>
 
 <script setup>
+import { ref, computed } from 'vue';
 import ToDoItem from './ToDoItem.vue';
 
-export default {
-  name: 'ToDoList',
-  components: {
-    ToDoItem
-  },
-  data() {
-    return {
-      todos: []
-    };
-  },
-  mounted() {
-    this.fetchTodos();
-  },
-  methods: {
-    async fetchTodos() {
-      const response = await axios.get('http://localhost:8080/api/todos');
-      this.todos = response.data;
-    }
+// Beispielhafte ToDo-Liste
+const todos = ref([
+  { id: 1, text: 'Einkaufen', done: false },
+  { id: 2, text: 'Hausaufgaben machen', done: false },
+  { id: 3, text: 'Fahrrad reparieren', done: true },
+]);
+
+// Filterstatus und Filterfunktion
+const filterStatus = ref('all');
+
+const filterTodos = (status) => {
+  filterStatus.value = status;
+};
+
+const filteredTodos = computed(() => {
+  if (filterStatus.value === 'done') {
+    return todos.value.filter(todo => todo.done);
+  } else if (filterStatus.value === 'undone') {
+    return todos.value.filter(todo => !todo.done);
+  }
+  return todos.value;
+});
+
+// Funktionen für das Markieren von erledigten Aufgaben und Löschen
+const toggleTodoDone = (todo) => {
+  todo.done = !todo.done;
+};
+
+const deleteTodo = (id) => {
+  const index = todos.value.findIndex(todo => todo.id === id);
+  if (index !== -1) {
+    todos.value.splice(index, 1);
   }
 };
 </script>
+
+<style scoped>
+/* Filterbuttons Styling */
+.filter {
+  margin-bottom: 10px;
+}
+
+.filter button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  background-color: #42b983;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.filter button:hover {
+  background-color: #3d9b72;
+}
+
+/* Animationen */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+</style>
