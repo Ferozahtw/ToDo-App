@@ -37,13 +37,18 @@ const filterTodos = (status) => {
 };
 
 const filteredTodos = computed(() => {
+  let result = todos.value;
+
   if (filterStatus.value === 'done') {
-    return todos.value.filter(todo => todo.done);
+    return result.filter(todo => todo.done);
   } else if (filterStatus.value === 'undone') {
-    return todos.value.filter(todo => !todo.done);
+    return result.filter(todo => !todo.done);
+  } else {
+    // Sortiere: nicht erledigte zuerst
+    return [...result].sort((a, b) => a.done - b.done);
   }
-  return todos.value;
 });
+
 
 // Funktionen für das Markieren von erledigten Aufgaben und Löschen
 const toggleTodoDone = (todo) => {
@@ -84,4 +89,10 @@ const deleteTodo = (id) => {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+
+li.done {
+  background-color: var(--color-background-soft);
+  border-left: 4px solid green;
+}
+
 </style>
