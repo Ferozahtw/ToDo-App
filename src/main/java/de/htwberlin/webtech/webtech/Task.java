@@ -1,6 +1,8 @@
 package de.htwberlin.webtech.webtech;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Task {
@@ -10,16 +12,25 @@ public class Task {
     private Long id;
 
     private String title;
+
     private String description;
 
     private boolean completed = false;
 
-    // Optional: User-Zuordnung in späterem Meilenstein
-    // @ManyToOne
-    // private User user;
+    private LocalDate dueDate;
 
-    public Task() {
-    }
+    private int priority = 3; // 1=hoch, 2=mittel, 3=niedrig
+
+    private String status = "offen"; // z. B. offen, in Bearbeitung, erledigt
+
+    private String recurrence; // z. B. täglich, wöchentlich, null = keine Wiederholung
+
+    private String assignedUser; // Benutzer-E-Mail oder Name
+
+    @ElementCollection
+    private List<String> attachments; // Pfade oder URLs zu Anhängen
+
+    public Task() {}
 
     public Task(String title, String description) {
         this.title = title;
@@ -27,7 +38,7 @@ public class Task {
         this.completed = false;
     }
 
-    // Getter und Setter
+    // --- Getter & Setter ---
 
     public Long getId() {
         return id;
@@ -55,5 +66,53 @@ public class Task {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRecurrence() {
+        return recurrence;
+    }
+
+    public void setRecurrence(String recurrence) {
+        this.recurrence = recurrence;
+    }
+
+    public String getAssignedUser() {
+        return assignedUser;
+    }
+
+    public void setAssignedUser(String assignedUser) {
+        this.assignedUser = assignedUser;
+    }
+
+    public List<String> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<String> attachments) {
+        this.attachments = attachments;
     }
 }
