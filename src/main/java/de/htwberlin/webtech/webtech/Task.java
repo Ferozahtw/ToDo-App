@@ -15,7 +15,7 @@ public class Task {
     private String status; // z.B. "offen", "in progress", "erledigt"
     private Integer priority; // 1=hoch, 2=mittel, 3=niedrig
     private String recurrence; // z.B. "daily", "weekly", "none"
-    private String assignedUser; // z.B. Benutzername oder ID
+    private String user; // z.B. Benutzername oder ID
 
     @Lob
     private String attachments; // als JSON-String für einfache Speicherung
@@ -85,12 +85,12 @@ public class Task {
         this.recurrence = recurrence;
     }
 
-    public String getAssignedUser() {
-        return assignedUser;
+    public String getUser() {
+        return user;
     }
 
-    public void setAssignedUser(String assignedUser) {
-        this.assignedUser = assignedUser;
+    public void setUser(String assignedUser) {
+        this.user = assignedUser;
     }
 
     public String getAttachments() {

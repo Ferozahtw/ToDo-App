@@ -40,7 +40,7 @@ public class TaskService {
                     task.setRecurrence(updatedTask.getRecurrence());
                     task.setStatus(updatedTask.getStatus());
                     task.setCompleted(updatedTask.isCompleted());
-                    task.setAssignedUser(updatedTask.getAssignedUser());
+                    task.setUser(updatedTask.getUser());
                     return taskRepository.save(task);
                 })
                 .orElse(null);
