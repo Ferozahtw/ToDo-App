@@ -1,7 +1,7 @@
 package de.htwberlin.webtech.webtech.Controller;
 
 import de.htwberlin.webtech.webtech.Task;
-import de.htwberlin.webtech.webtech.TaskRepository;
+import de.htwberlin.webtech.webtech.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,56 +13,50 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class TaskController {
 
+    private final TaskService taskService;
+
     @Autowired
-    private TaskRepository taskRepository;
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
     // 🔹 Alle Aufgaben anzeigen
     @GetMapping
     public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+        return taskService.getAllTasks();
     }
 
     // 🔹 Neue Aufgabe speichern
     @PostMapping
     public Task createTask(@RequestBody Task task) {
-        return taskRepository.save(task);
+        return taskService.createTask(task);
     }
 
     // 🔹 Eine Aufgabe löschen
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable Long id) {
-        taskRepository.deleteById(id);
+        taskService.deleteTask(id);
     }
 
     // 🔹 Eine Aufgabe als erledigt markieren
     @PutMapping("/{id}/complete")
     public Task completeTask(@PathVariable Long id) {
-        Optional<Task> optionalTask = taskRepository.findById(id);
-        if (optionalTask.isPresent()) {
-            Task task = optionalTask.get();
-            task.setCompleted(true);
-            task.setStatus("erledigt");
-            return taskRepository.save(task);
-        } else {
-            throw new RuntimeException("Aufgabe nicht gefunden");
-        }
-    }
-
-    // 🔹 Optional: Aufgabe vollständig aktualisieren (z. B. für Bearbeitung)
-    @PutMapping("/{id}")
-    public Task updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
-        return taskRepository.findById(id)
+        return taskService.getTaskById(id)
                 .map(task -> {
-                    task.setTitle(updatedTask.getTitle());
-                    task.setDescription(updatedTask.getDescription());
-                    task.setDueDate(updatedTask.getDueDate());
-                    task.setPriority(updatedTask.getPriority());
-                    task.setStatus(updatedTask.getStatus());
-                    task.setRecurrence(updatedTask.getRecurrence());
-                    task.setAssignedUser(updatedTask.getAssignedUser());
-                    task.setAttachments(updatedTask.getAttachments());
-                    return taskRepository.save(task);
+                    task.setCompleted(true);
+                    task.setStatus("erledigt");
+                    return taskService.createTask(task); // gleiche Methode wie save
                 })
                 .orElseThrow(() -> new RuntimeException("Aufgabe nicht gefunden"));
+    }
+
+    // 🔹 Optional: Aufgabe vollständig aktualisieren
+    @PutMapping("/{id}")
+    public Task updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
+        Task result = taskService.updateTask(id, updatedTask);
+        if (result == null) {
+            throw new RuntimeException("Aufgabe nicht gefunden");
+        }
+        return result;
     }
 }

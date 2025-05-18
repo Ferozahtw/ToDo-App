@@ -1,8 +1,6 @@
 package de.htwberlin.webtech.webtech;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 public class Task {
@@ -10,19 +8,22 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String description;
     private boolean completed = false;
-    private LocalDate dueDate;
-    private int priority = 3; // 1=hoch, 2=mittel, 3=niedrig
-    private String status = "offen"; // z. B. offen, in Bearbeitung, erledigt
-    private String recurrence; // z. B. täglich, wöchentlich, null = keine Wiederholung
-    private String assignedUser; // Benutzer-E-Mail oder Name
+    private String status; // z.B. "offen", "in progress", "erledigt"
+    private Integer priority; // 1=hoch, 2=mittel, 3=niedrig
+    private String recurrence; // z.B. "daily", "weekly", "none"
+    private String assignedUser; // z.B. Benutzername oder ID
 
-    @ElementCollection
-    private List<String> attachments; // Pfade oder URLs zu Anhängen
+    @Lob
+    private String attachments; // als JSON-String für einfache Speicherung
 
-    public Task() {}
+    private String dueDate;
+
+    public Task() {
+    }
 
     public Task(String title, String description) {
         this.title = title;
@@ -30,7 +31,7 @@ public class Task {
         this.completed = false;
     }
 
-    // --- Getter & Setter ---
+    // Getter und Setter
 
     public Long getId() {
         return id;
@@ -60,28 +61,20 @@ public class Task {
         this.completed = completed;
     }
 
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     public String getRecurrence() {
@@ -100,11 +93,19 @@ public class Task {
         this.assignedUser = assignedUser;
     }
 
-    public List<String> getAttachments() {
+    public String getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<String> attachments) {
+    public void setAttachments(String attachments) {
         this.attachments = attachments;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
     }
 }
