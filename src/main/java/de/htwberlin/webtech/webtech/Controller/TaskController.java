@@ -1,23 +1,41 @@
 package de.htwberlin.webtech.webtech.Controller;
 
 import de.htwberlin.webtech.webtech.Task;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import de.htwberlin.webtech.webtech.TaskRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/task")
-@CrossOrigin(origins = "*") // erlaubt Zugriff vom Frontend (Vue.js)
+@CrossOrigin(origins = "*")
 public class TaskController {
 
-    @GetMapping
-    public List<Task> getDummyTasks() {
-        Task task1 = new Task("Webtechnologie lernen", "M1 bis 20. April erledigen");
-        Task task2 = new Task("Vue.js vorbereiten", "Für M2 ein v-for schreiben");
+    private final TaskRepository repository;
 
-        return List.of(task1, task2);
+    public TaskController(TaskRepository repository) {
+        this.repository = repository;
+    }
+
+    @GetMapping
+    public List<Task> getAllTasks() {
+        return repository.findAll();
+    }
+
+    @PostMapping
+    public Task createTask(@RequestBody Task task) {
+        return repository.save(task);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteTask(@PathVariable Long id) {
+        repository.deleteById(id);
+    }
+
+    @PutMapping("/{id}/complete")
+    public Task markTaskCompleted(@PathVariable Long id) {
+        Task task = repository.findById(id).orElseThrow();
+        task.setCompleted(true);
+        return repository.save(task);
     }
 }
