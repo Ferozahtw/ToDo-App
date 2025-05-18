@@ -10,21 +10,13 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
-
     private String description;
-
     private boolean completed = false;
-
     private LocalDate dueDate;
-
     private int priority = 3; // 1=hoch, 2=mittel, 3=niedrig
-
     private String status = "offen"; // z. B. offen, in Bearbeitung, erledigt
-
     private String recurrence; // z. B. täglich, wöchentlich, null = keine Wiederholung
-
     private String assignedUser; // Benutzer-E-Mail oder Name
 
     @ElementCollection
