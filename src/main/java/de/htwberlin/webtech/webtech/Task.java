@@ -15,7 +15,10 @@ public class Task {
     private String status; // z.B. "offen", "in progress", "erledigt"
     private Integer priority; // 1=hoch, 2=mittel, 3=niedrig
     private String recurrence; // z.B. "daily", "weekly", "none"
+    @Column(name = "assigned_user")
     private String user; // z.B. Benutzername oder ID
+
+
 
     @Lob
     private String attachments; // als JSON-String für einfache Speicherung
