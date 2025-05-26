@@ -3,10 +3,11 @@ package de.htwberlin.webtech.webtech.Controller;
 import de.htwberlin.webtech.webtech.Task;
 import de.htwberlin.webtech.webtech.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/task")
@@ -41,13 +42,12 @@ public class TaskController {
     // 🔹 Eine Aufgabe als erledigt markieren
     @PutMapping("/{id}/complete")
     public Task completeTask(@PathVariable Long id) {
-        return taskService.getTaskById(id)
-                .map(task -> {
-                    task.setCompleted(true);
-                    task.setStatus("erledigt");
-                    return taskService.createTask(task); // gleiche Methode wie save
-                })
-                .orElseThrow(() -> new RuntimeException("Aufgabe nicht gefunden"));
+        Task task = taskService.getTaskById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aufgabe nicht gefunden"));
+
+        task.setCompleted(true);
+        task.setStatus("erledigt");
+        return taskService.createTask(task); // save()
     }
 
     // 🔹 Optional: Aufgabe vollständig aktualisieren
