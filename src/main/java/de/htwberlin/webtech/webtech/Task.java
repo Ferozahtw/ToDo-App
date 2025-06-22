@@ -14,7 +14,7 @@ public class Task {
     private boolean completed = false;
     private String status; // z.B. "offen", "in progress", "erledigt"
     private Integer priority; // 1=hoch, 2=mittel, 3=niedrig
-    private String recurrence; // z.B. "daily", "weekly", "none"
+    private String recurring; // z.B. "daily", "weekly", "none"
     @Column(name = "assigned_user")
     private String user; // z.B. Benutzername oder ID
 
@@ -80,12 +80,12 @@ public class Task {
         this.priority = priority;
     }
 
-    public String getRecurrence() {
-        return recurrence;
+    public String getRecurring() {
+        return recurring;
     }
 
-    public void setRecurrence(String recurrence) {
-        this.recurrence = recurrence;
+    public void setRecurring(String recurring) {
+        this.recurring = recurring;
     }
 
     public String getUser() {
