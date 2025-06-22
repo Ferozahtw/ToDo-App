@@ -38,6 +38,7 @@ public class TaskService {
                     task.setDueDate(updatedTask.getDueDate());
                     task.setPriority(updatedTask.getPriority());
                     task.setRecurrence(updatedTask.getRecurrence());
+                    task.setAttachments(updatedTask.getAttachments());
                     task.setStatus(updatedTask.getStatus());
                     task.setCompleted(updatedTask.isCompleted());
                     task.setUser(updatedTask.getUser());
