@@ -7,7 +7,9 @@ plugins {
 group = 'de.htwberlin.webtech'
 version = '0.0.1-SNAPSHOT'
 
-// >>> toolchain entfernt
+java {
+	sourceCompatibility = '23'
+}
 
 repositories {
 	mavenCentral()
