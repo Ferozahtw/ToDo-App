@@ -4,7 +4,7 @@ COPY --chown=gradle:gradle . /home/gradle/project
 WORKDIR /home/gradle/project
 
 # Tests vermeiden, um Build-Abbrüche zu vermeiden
-RUN ./gradlew build -x test --no-daemon
+RUN gradle build -x
 
 # Laufzeit-Stage
 FROM eclipse-temurin:17-jdk
